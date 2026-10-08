@@ -10,6 +10,17 @@
 
 ---
 
+## 0. Câu hỏi NB0: vì sao margin có thể tăng trong khi xác suất câu chosen lại giảm?
+
+DPO chỉ tối ưu **hiệu số** reward: margin = β[(log π(y_w) − log π_ref(y_w)) − (log π(y_l) − log π_ref(y_l))].
+Loss chỉ phụ thuộc vào hiệu số này, không ràng buộc từng vế. Nếu log π(y_w) giảm 3 nat nhưng log π(y_l) giảm 5 nat
+thì margin vẫn tăng 2 nat và loss giảm y hệt kịch bản "chosen ↑ 1, rejected ↓ 1" (NB0 §5: cả hai cùng loss 0.127).
+Câu chosen và rejected thường giống nhau phần lớn token, nên gradient đẩy rejected xuống cũng kéo chosen xuống theo;
+khối xác suất bị dồn sang các câu khác ngoài cặp. Đó là dịch chuyển xác suất (likelihood displacement). RPO khắc phục
+bằng cách cộng thêm NLL của câu chosen vào loss.
+
+---
+
 ## 1. Cấu hình
 
 | Mục | Giá trị |
